@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMC Skill Level Calculator</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kimberly&display=swap">
+    <style>
+        body {
+            font-family: 'Kimberly', sans-serif; /* Use Kimberly font */
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            display: flex; /* Use flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            min-height: 100vh; /* Set minimum height to fill the viewport */
+        }
+        .container {
+            position: relative; /* Make the container position relative */
+            width: 90%;
+            max-width: 600px; /* Max width for readability on larger screens */
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            padding: 8px;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: left; /* Align results to the left */
+        }
+        .info {
+            text-align: center;
+            margin-top: 10px;
+            text-shadow: 2px 2px 4px #000000; /* Text shadow effect */
+        }
+        .prompt {
+            position: absolute; /* Position absolute for positioning */
+            bottom: 5px; /* Align at the bottom */
+            right: 5px; /* Align at the right */
+            font-size: 6px; /* Set font size */
+            color: red; /* Set color to red */
+        }
+    </style>
+    <script>
+        function calculateSkillLevel() {
+            var kills = parseInt(document.getElementById('kills').value);
+            var deaths = parseInt(document.getElementById('deaths').value);
+            var skillLevel = (kills / deaths) * 25;
+            var nextSkillLevel = Math.ceil(skillLevel);
+            var percentageComplete = ((nextSkillLevel - skillLevel) / 1) * 100;
+            var percentageRemaining = 100 - percentageComplete;
+
+            document.getElementById('result').innerHTML = "Skill Level: " + skillLevel.toFixed(4); // Display with four decimal places
+            document.getElementById('nextLevel').innerHTML = "Next Skill Level: " + nextSkillLevel;
+            document.getElementById('percentage').innerHTML = "Completed: " + percentageRemaining.toFixed(2) + "%"; 
+            document.getElementById('remaining').innerHTML = "Remaining: " + percentageComplete.toFixed(2) + "%"; 
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>MMC Skill Level Calculator</h2>
+        <form>
+            <label for="kills">Kills:</label>
+            <input type="number" id="kills" name="kills" min="0" value="0"><br>
+            
+            <label for="deaths">Deaths:</label>
+            <input type="number" id="deaths" name="deaths" min="0" value="0"><br>
+            
+            <button type="button" onclick="calculateSkillLevel()">Calculate</button>
+        </form>
+        
+        <div class="result">
+            <div id="result"></div>
+            <div id="nextLevel"></div>
+            <div id="percentage"></div>
+            <div id="remaining"></div>
+        </div>
+        <div class="prompt">Prompted by Julio Savio</div>
+    </div>
+</body>
+</html>
