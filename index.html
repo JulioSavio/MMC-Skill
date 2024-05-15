@@ -122,8 +122,8 @@
             var deaths = parseInt(document.getElementById('deaths').value);
             var skillLevel = (kills / deaths) * 25;
             var nextSkillLevel = Math.ceil(skillLevel);
-            var percentageCompleted = ((nextSkillLevel - skillLevel) / 1) * 100;
-            var percentageRemaining = 100 - percentageCompleted;
+            var percentageRemaining = ((nextSkillLevel - skillLevel) / 1) * 100;
+            var percentageCompleted = 100 - percentageRemaining;
 
             document.getElementById('result').innerHTML = "Skill Level: " + skillLevel.toFixed(4); // Display with four decimal places
             document.getElementById('nextLevel').innerHTML = "Next Skill Level: " + nextSkillLevel;
