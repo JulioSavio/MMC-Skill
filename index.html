@@ -144,15 +144,24 @@
     </script>
 </head>
 <body>
+    <script>
+        function clearDefaultValue(element) {
+            if (element.value === "0") {
+                element.value = "";
+            }
+        }
+    </script>
+</head>
+<body>
     <div class="container">
         <h2>MMC Skill Level</h2>
         <button class="theme-toggle" onclick="toggleTheme()">Dark/Light</button>
-        <form>
+       <form>
             <label for="kills">Kills</label>
-            <input type="number" id="kills" name="kills" min="0" value="0"><br>
+            <input type="number" id="kills" name="kills" min="0" value="0" onfocus="clearDefaultValue(this)" placeholder="0"><br>
             
-            <label for="deaths">Deaths</label>
-            <input type="number" id="deaths" name="deaths" min="0" value="0"><br>
+           <label for="deaths">Deaths</label>
+            <input type="number" id="deaths" name="deaths" min="0" value="0" onfocus="clearDefaultValue(this)" placeholder="0"><br>
             
             <button type="button" onclick="calculateSkillLevel()">Calculate</button>
         </form>
