@@ -3,137 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MMC Skill Level</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kimberly&display=swap">
+    <title>MMC Skill Level Calculator</title>
     <style>
+        /* General Styles */
         body {
-            font-family: 'Kimberly', sans-serif; /* Use Kimberly font */
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f2f2f2;
-            display: flex; /* Use flexbox for centering */
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
-            min-height: 100vh; /* Set minimum height to fill the viewport */
+            background-color: #f4f4f9;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
         }
+
         .container {
-            position: relative; /* Make the container position relative */
-            width: 90%;
-            max-width: 600px; /* Max width for readability on larger screens */
+            max-width: 400px;
+            margin: 50px auto;
             padding: 20px;
             background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
         }
+
         h2 {
             text-align: center;
+            color: #4CAF50;
+            margin-bottom: 20px;
         }
+
         form {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
+
         label {
-            display: block;
-            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
         }
+
         input {
-            padding: 8px;
-            margin-bottom: 15px;
-            width: 100%;
-            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
+
+        input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
         button {
-            padding: 5px 10px; /* Adjusted padding */
-            background-color: #4CAF50; /* Green button background color */
+            padding: 10px;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 3px;
+            border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
+
         button:hover {
-            background-color: #45a049; /* Darker green hover background color */
+            background-color: #45a049;
         }
-        .result {
-            margin-top: 20px;
-            text-align: left; /* Align results to the left */
-            display: none; /* Hide result initially */
-        }
-        .info {
-            text-align: center;
-            margin-top: 10px;
-            text-shadow: 2px 2px 4px #000000; /* Text shadow effect */
-        }
+
         .theme-toggle {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            cursor: pointer;
-            font-size: 10px; /* Smaller font size */
-            background-color: #888; /* Grey background color */
-            color: white;
-            border: none;
-            border-radius: 3px;
-            padding: 5px 10px; /* Adjusted padding */
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
         }
-        /* Dark Theme */
-        body.dark-theme {
-            background-color: #333; /* Dark grey background */
-            color: #fff; /* White text color */
+
+        .theme-toggle:hover {
+            background-color: #555;
         }
-        .dark-theme .container {
-            background-color: #444; /* Dark grey container background */
+
+        .result {
+            margin-top: 20px;
+            display: none;
         }
-        .dark-theme button {
-            background-color: #4CAF50; /* Dark green button background color */
+
+        .result div {
+            margin: 10px 0;
+            font-size: 16px;
         }
-        .dark-theme button:hover {
-            background-color: #45a049; /* Darker green hover background color */
-        }
-        /* Prompt text */
-        .prompt {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            font-size: 6px;
-            color: red; /* Red color */
-        }
-        /* Progress bars */
+
         .progress {
             height: 10px;
-            margin-bottom: 5px; /* Adjusted margin */
+            background-color: #ddd;
             border-radius: 5px;
             overflow: hidden;
-            background-color: #ddd;
-            display: none; /* Hide progress initially */
+            margin: 10px 0;
+            display: none;
         }
+
         .progress-bar {
             height: 100%;
             transition: width 0.5s ease;
         }
+
         .progress-green {
-            background-color: green;
+            background-color: #4CAF50;
         }
+
         .progress-red {
-            background-color: red;
+            background-color: #ff4d4d;
+        }
+
+        .prompt {
+            text-align: right;
+            font-size: 12px;
+            color: #888;
+            margin-top: 20px;
+        }
+
+        /* Dark Theme */
+        body.dark-theme {
+            background-color: #1e1e1e;
+            color: #fff;
+        }
+
+        .dark-theme .container {
+            background-color: #2c2c2c;
+        }
+
+        .dark-theme label {
+            color: #ccc;
+        }
+
+        .dark-theme input {
+            background-color: #444;
+            border-color: #555;
+            color: #fff;
+        }
+
+        .dark-theme input:focus {
+            border-color: #4CAF50;
+        }
+
+        .dark-theme button {
+            background-color: #4CAF50;
+        }
+
+        .dark-theme button:hover {
+            background-color: #45a049;
+        }
+
+        .dark-theme .theme-toggle {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        .dark-theme .theme-toggle:hover {
+            background-color: #45a049;
+        }
+
+        .dark-theme .progress {
+            background-color: #444;
+        }
+
+        .dark-theme .prompt {
+            color: #aaa;
         }
     </style>
     <script>
         function calculateSkillLevel() {
-            var kills = parseInt(document.getElementById('kills').value);
-            var deaths = parseInt(document.getElementById('deaths').value);
-            var skillLevel = (kills / deaths) * 25;
-            var nextSkillLevel = Math.ceil(skillLevel);
-            var percentageRemaining = ((nextSkillLevel - skillLevel) / 1) * 100;
-            var percentageCompleted = 100 - percentageRemaining;
+            const kills = parseInt(document.getElementById('kills').value);
+            const deaths = parseInt(document.getElementById('deaths').value);
 
-            document.getElementById('result').innerHTML = "Skill Level: " + skillLevel.toFixed(4); // Display with four decimal places
-            document.getElementById('nextLevel').innerHTML = "Next Skill Level: " + nextSkillLevel;
-            document.getElementById('completed').innerHTML = "Completed: " + percentageCompleted.toFixed(2) + "%"; // Change name to "Percentage Completed"
-            document.getElementById('remaining').innerHTML = "Remaining: " + percentageRemaining.toFixed(2) + "%"; // Change name to "Percentage Remaining"
+            if (deaths === 0) {
+                alert("Deaths cannot be zero. Please enter a valid number.");
+                return;
+            }
 
-            document.getElementById('progress-green').style.width = percentageCompleted + "%";
-            document.getElementById('progress-red').style.width = percentageRemaining + "%";
+            const skillLevel = (kills / deaths) * 25;
+            const nextSkillLevel = Math.ceil(skillLevel);
+            const percentageRemaining = ((nextSkillLevel - skillLevel) / 1) * 100;
+            const percentageCompleted = 100 - percentageRemaining;
 
-            // Show results and progress bars
+            document.getElementById('result').innerHTML = `Skill Level: ${skillLevel.toFixed(4)}`;
+            document.getElementById('nextLevel').innerHTML = `Next Skill Level: ${nextSkillLevel}`;
+            document.getElementById('completed').innerHTML = `Completed: ${percentageCompleted.toFixed(2)}%`;
+            document.getElementById('remaining').innerHTML = `Remaining: ${percentageRemaining.toFixed(2)}%`;
+
+            document.getElementById('progress-green').style.width = `${percentageCompleted}%`;
+            document.getElementById('progress-red').style.width = `${percentageRemaining}%`;
+
             document.querySelector('.result').style.display = 'block';
             document.querySelectorAll('.progress').forEach(progress => progress.style.display = 'block');
         }
@@ -141,10 +200,7 @@
         function toggleTheme() {
             document.body.classList.toggle('dark-theme');
         }
-    </script>
-</head>
-<body>
-    <script>
+
         function clearDefaultValue(element) {
             if (element.value === "0") {
                 element.value = "";
@@ -154,26 +210,23 @@
 </head>
 <body>
     <div class="container">
-        <h2>MMC Skill Level</h2>
-        <button class="theme-toggle" onclick="toggleTheme()">Dark/Light</button>
-       <form>
+        <h2>MMC Skill Level Calculator</h2>
+        <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark/Light</button>
+        <form>
             <label for="kills">Kills</label>
-            <input type="number" id="kills" name="kills" min="0" value="0" onfocus="clearDefaultValue(this)" placeholder="0"><br>
-            
-           <label for="deaths">Deaths</label>
-            <input type="number" id="deaths" name="deaths" min="0" value="0" onfocus="clearDefaultValue(this)" placeholder="0"><br>
-            
+            <input type="number" id="kills" name="kills" min="0" value="0" onfocus="clearDefaultValue(this)" placeholder="Enter kills">
+            <label for="deaths">Deaths</label>
+            <input type="number" id="deaths" name="deaths" min="0" value="0" onfocus="clearDefaultValue(this)" placeholder="Enter deaths">
             <button type="button" onclick="calculateSkillLevel()">Calculate</button>
         </form>
-        
         <div class="result">
             <div id="result"></div>
             <div id="nextLevel"></div>
-            <div id="completed"></div> <!-- Changed to "Percentage Completed" -->
+            <div id="completed"></div>
             <div class="progress">
                 <div id="progress-green" class="progress-bar progress-green"></div>
             </div>
-            <div id="remaining"></div> <!-- Changed to "Percentage Remaining" -->
+            <div id="remaining"></div>
         </div>
         <div class="progress">
             <div id="progress-red" class="progress-bar progress-red"></div>
