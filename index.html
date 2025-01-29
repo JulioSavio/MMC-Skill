@@ -23,6 +23,8 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             transition: background-color 0.3s;
+            position: relative;
+            z-index: 1;
         }
 
         h2 {
@@ -40,6 +42,7 @@
         label {
             font-weight: bold;
             color: #555;
+            animation: slideInLeft 0.5s ease-out;
         }
 
         input {
@@ -47,49 +50,91 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease-in-out;
         }
 
         input:focus {
             border-color: #4CAF50;
             outline: none;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+            transform: scale(1.02);
         }
 
         button {
-            padding: 10px;
+            padding: 12px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
         }
 
         button:hover {
             background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: ripple 0.6s ease-out;
         }
 
         .theme-toggle {
-            position: absolute;
+            position: fixed;
             top: 20px;
             right: 20px;
             background-color: #333;
             color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            z-index: 1000; /* Ensure it stays on top */
         }
 
         .theme-toggle:hover {
             background-color: #555;
         }
 
+        .theme-toggle i {
+            font-size: 20px;
+        }
+
         .result {
             margin-top: 20px;
             display: none;
+            animation: slideInUp 0.5s ease-out;
         }
 
         .result div {
             margin: 10px 0;
             font-size: 16px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease-out forwards;
         }
 
         .progress {
@@ -99,15 +144,17 @@
             overflow: hidden;
             margin: 10px 0;
             display: none;
+            animation: expand 0.5s ease-out;
         }
 
         .progress-bar {
             height: 100%;
-            transition: width 0.5s ease;
+            width: 0; /* Ensure initial width is 0 */
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .progress-green {
-            background-color: #4CAF50;
+            background-color: #4CAF50; /* Fixed: Ensure green color is applied */
         }
 
         .progress-red {
@@ -119,6 +166,7 @@
             font-size: 12px;
             color: #888;
             margin-top: 20px;
+            animation: fadeIn 1s ease-out;
         }
 
         /* Dark Theme */
@@ -141,36 +189,48 @@
             color: #fff;
         }
 
-        .dark-theme input:focus {
-            border-color: #4CAF50;
-        }
-
         .dark-theme button {
             background-color: #4CAF50;
-        }
-
-        .dark-theme button:hover {
-            background-color: #45a049;
-        }
-
-        .dark-theme .theme-toggle {
-            background-color: #4CAF50;
-            color: #fff;
-        }
-
-        .dark-theme .theme-toggle:hover {
-            background-color: #45a049;
-        }
-
-        .dark-theme .progress {
-            background-color: #444;
         }
 
         .dark-theme .prompt {
             color: #aaa;
         }
+
+        /* Animations */
+        @keyframes ripple {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(20); }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes expand {
+            from { width: 0; }
+            to { width: 100%; }
+        }
     </style>
     <script>
+        function animateValue(elementId, start, end, duration, suffix = '') {
+            const element = document.getElementById(elementId);
+            const startTime = Date.now();
+            const update = () => {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = start + progress * (end - start);
+                element.textContent = suffix + current.toFixed(4);
+                if (progress < 1) requestAnimationFrame(update);
+            };
+            requestAnimationFrame(update);
+        }
+
         function calculateSkillLevel() {
             const kills = parseInt(document.getElementById('kills').value);
             const deaths = parseInt(document.getElementById('deaths').value);
@@ -185,20 +245,38 @@
             const percentageRemaining = ((nextSkillLevel - skillLevel) / 1) * 100;
             const percentageCompleted = 100 - percentageRemaining;
 
-            document.getElementById('result').innerHTML = `Skill Level: ${skillLevel.toFixed(4)}`;
-            document.getElementById('nextLevel').innerHTML = `Next Skill Level: ${nextSkillLevel}`;
-            document.getElementById('completed').innerHTML = `Completed: ${percentageCompleted.toFixed(2)}%`;
-            document.getElementById('remaining').innerHTML = `Remaining: ${percentageRemaining.toFixed(2)}%`;
+            // Animate values
+            animateValue('result', 0, skillLevel, 1000, 'Skill Level: ');
+            animateValue('completed', 0, percentageCompleted, 1000, 'Completed: ');
+            animateValue('remaining', 0, percentageRemaining, 1000, 'Remaining: ');
 
+            document.getElementById('nextLevel').textContent = `Next Skill Level: ${nextSkillLevel}`;
+            
+            // Progress bars animation
             document.getElementById('progress-green').style.width = `${percentageCompleted}%`;
             document.getElementById('progress-red').style.width = `${percentageRemaining}%`;
 
+            // Show results with animations
             document.querySelector('.result').style.display = 'block';
             document.querySelectorAll('.progress').forEach(progress => progress.style.display = 'block');
+            
+            // Animate result elements
+            document.querySelectorAll('.result div').forEach((div, index) => {
+                div.style.animationDelay = `${index * 0.2}s`;
+            });
         }
 
         function toggleTheme() {
-            document.body.classList.toggle('dark-theme');
+            const body = document.body;
+            body.classList.toggle('dark-theme');
+            const themeToggle = document.querySelector('.theme-toggle i');
+            if (body.classList.contains('dark-theme')) {
+                themeToggle.classList.remove('fa-sun');
+                themeToggle.classList.add('fa-moon');
+            } else {
+                themeToggle.classList.remove('fa-moon');
+                themeToggle.classList.add('fa-sun');
+            }
         }
 
         function clearDefaultValue(element) {
@@ -207,11 +285,14 @@
             }
         }
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-sun"></i>
+    </button>
     <div class="container">
         <h2>MMC Skill Level Calculator</h2>
-        <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark/Light</button>
         <form>
             <label for="kills">Kills</label>
             <input type="number" id="kills" name="kills" min="0" value="0" onfocus="clearDefaultValue(this)" placeholder="Enter kills">
